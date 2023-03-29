@@ -1,7 +1,10 @@
-
 # 🔎 Error Lens for Neovim
 
 An enhanced visual diagnostic display for Neovim, inspired by the [Error Lens extension for Visual Studio Code](https://github.com/usernamehw/vscode-error-lens).
+
+
+# 📸 Showcase
+![Showcase of all diagnostic hints](media/error_lens_showcase.png "Showcase of all diagnostic hints")
 
 ## ✨ Features
 
@@ -9,6 +12,13 @@ An enhanced visual diagnostic display for Neovim, inspired by the [Error Lens ex
 - Customizable colors and appearance
 - Auto-adjust colors based on the theme color
 - Heavily inspired by the Error Lens plugin for Visual Studio Code
+
+## 🚧 Roadmap
+
+- [ ] Togglable hints
+- [x] Auto adjust colors based on theme
+- [x] Custom colors
+
 
 ## ⚡️ Requirements
 
@@ -58,6 +68,8 @@ lsp.setup()
 
 ```
 
+VSCODE Info ONedark pro
+
 
 ## Default Options
 error-lens.nvim comes with the following default options:
@@ -93,6 +105,11 @@ error-lens.nvim comes with the following default options:
 
 ## 🚀 Usage
 After installing and configuring the plugin, it will automatically enhance the diagnostic display in Neovim.
+
+## ⚠️ Disclaimer:
+I recently switched from VsCode to Neovim and really missed that plugin. Therefore i tried to code it myself.
+I am not really familiar with Lua, so if you find any bugs please raise an issue.
+PRs and improvements or ideas are also welcome.
 
 
 ## 📚 Credits
