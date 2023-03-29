@@ -33,7 +33,6 @@ local default_options = {
 }
 
 function M.setup(options)
-    print("Setting up")
     -- Merge user options with default options
     M.options = vim.tbl_deep_extend("force", {}, default_options, options or {})
 

@@ -28,7 +28,6 @@ end
 
 
 local function update_highlights()
-    print("update_highlights")
     clear_red_highlights()
 
     local buf = api.nvim_get_current_buf()
