@@ -23,7 +23,7 @@ Install the plugin with your preferred package manager:
 
 ```lua
 -- Lua
-use { "chikko80/error-lens.nvim" }
+use "chikko80/error-lens.nvim"
 ```
 
 ## ⚠️  Caution
