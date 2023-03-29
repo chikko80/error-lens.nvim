@@ -3,12 +3,12 @@
 An enhanced visual diagnostic display for Neovim, inspired by the [Error Lens extension for Visual Studio Code](https://github.com/usernamehw/vscode-error-lens).
 
 
-# 📸 Showcase
+## 📸 Showcase
 ![Showcase of all diagnostic hints](media/error_lens_showcase.png "Showcase of all diagnostic hints")
 
 ## ✨ Features
 
-- Easy-to-notice diagnostic messages
+- Visually supportive diagnostic messages
 - Customizable colors and appearance
 - Auto-adjust colors based on the theme color
 - Heavily inspired by the Error Lens plugin for Visual Studio Code
@@ -32,7 +32,6 @@ Install the plugin with your preferred package manager:
 ### packer
 
 ```lua
--- Lua
 use "chikko80/error-lens.nvim"
 ```
 
@@ -60,7 +59,7 @@ lsp.ensure_installed({
 
 lsp.on_attach(function(client, bufnr)
     require("error-lens").setup(client, {
-        -- your config goes here
+        -- your options go here
     })
 end)
 
@@ -68,7 +67,6 @@ lsp.setup()
 
 ```
 
-VSCODE Info ONedark pro
 
 
 ## Default Options
@@ -105,6 +103,15 @@ error-lens.nvim comes with the following default options:
 
 ## 🚀 Usage
 After installing and configuring the plugin, it will automatically enhance the diagnostic display in Neovim.
+
+
+## ⌨️  You just switch from VsCode and used OneDarkPro?
+
+If you're switching from VSCode and are used to the beloved [OneDarkPro Theme](https://marketplace.visualstudio.com/items?itemName=zhuangtongfa.Material-theme), 
+you can use its equivalent for Neovim: [olimorris/onedarkpro.nvim](https://github.com/olimorris/onedarkpro.nvim).
+
+The default colors are set up for this theme, and we've tried our best to match the colors (despite the lack of opacity in nvim).
+
 
 ## ⚠️ Disclaimer:
 I recently switched from VsCode to Neovim and really missed that plugin. Therefore i tried to code it myself.
