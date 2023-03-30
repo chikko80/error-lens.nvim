@@ -11,6 +11,7 @@ An enhanced visual diagnostic display for Neovim, inspired by the [Error Lens ex
 - Visually supportive diagnostic messages
 - Customizable colors and appearance
 - Auto-adjust colors based on the theme color
+- Easy setup with all package managers
 - Heavily inspired by the Error Lens plugin for Visual Studio Code
 
 ## 🚧 Roadmap
@@ -33,7 +34,24 @@ Install the plugin with your preferred package manager:
 
 ```lua
 use "chikko80/error-lens.nvim"
+
+require("error-lens").setup(client, {
+    -- your options go here
+})
 ```
+
+### lazy.nvim
+
+```lua
+{
+    dir = "chikko80/error-lens.nvim",
+    event = "LspAttach",
+    opts = {
+        -- your options go here
+    },
+}
+```
+
 
 ## ⚠️  Caution
 This Plugin overrides ```vim.diagnostic.config({})``` by default, since virtual_text must be disable for proper displaying
@@ -41,37 +59,7 @@ This Plugin overrides ```vim.diagnostic.config({})``` by default, since virtual_
 
 ## ⚙️ Configuration
 
-### Setup
-You can configure error-lens.nvim by calling the setup function within an on_attach function of you lsp config.
-If you use ```lsp-zero``` check this example :
-
-
-```lua
-local lsp = require('lsp-zero').preset({
-    -- preset
-})
-
-lsp.ensure_installed({
-    'lua_ls',
-    'rust_analyzer',
-    'solidity',
-})
-
-lsp.on_attach(function(client, bufnr)
-    require("error-lens").setup(client, {
-        -- your options go here
-    })
-end)
-
-lsp.setup()
-
-```
-
-
-
-## Default Options
 error-lens.nvim comes with the following default options:
-
 
 ```lua
 {
@@ -80,7 +68,7 @@ error-lens.nvim comes with the following default options:
   -- theme background color with a color blender
   auto_adjust = {
     enable = false,
-    theme_bg = nil, -- mandatory if enable true
+    theme_bg = nil, -- mandatory if enable true (e.g. #281478)
     step = 5, -- inc: colors should be brighter/darker
     total = 30 -- steps of blender
   },
@@ -110,7 +98,7 @@ After installing and configuring the plugin, it will automatically enhance the d
 If you're switching from VSCode and are used to the beloved [OneDarkPro Theme](https://marketplace.visualstudio.com/items?itemName=zhuangtongfa.Material-theme), 
 you can use its equivalent for Neovim: [olimorris/onedarkpro.nvim](https://github.com/olimorris/onedarkpro.nvim).
 
-The default colors are set up for this theme, and we've tried our best to match the colors (despite the lack of opacity in nvim).
+The default colors are set up for this theme, and i've tried my best to match the colors (despite the lack of opacity in nvim).
 
 
 ## ⚠️ Disclaimer:
