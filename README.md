@@ -44,7 +44,7 @@ require("error-lens").setup(client, {
 
 ```lua
 {
-    dir = "chikko80/error-lens.nvim",
+    "chikko80/error-lens.nvim",
     event = "LspAttach",
     opts = {
         -- your options go here

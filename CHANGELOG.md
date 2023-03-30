@@ -1,4 +1,4 @@
-## [1.0.1]
+## [1.0.0]
 
 ### Added
 - Added a new setup function without parameters to hook into LSP clients' diagnostics.
