@@ -31,7 +31,6 @@ local default_options = {
 }
 
 function M.setup(options)
-
 	-- Merge user options with default options
 	M.options = vim.tbl_deep_extend("force", {}, default_options, options or {})
 
@@ -89,8 +88,13 @@ function M.setup(options)
 	-- Save the user's original virtual_text setting
 	M.user_virtual_text = vim.diagnostic.config().virtual_text
 
-    utils.set_virtual_text(false)
+	utils.set_virtual_text(false)
 
+	if M.options.enabled then
+		vim.diagnostic.config({ error_lens = true })
+	else
+		vim.diagnostic.config({ error_lens = false })
+	end
 end
 
 return M
