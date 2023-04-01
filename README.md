@@ -12,11 +12,12 @@ An enhanced visual diagnostic display for Neovim, inspired by the [Error Lens ex
 - Customizable colors and appearance
 - Auto-adjust colors based on the theme color
 - Easy setup with all package managers
+- Togglable
 - Heavily inspired by the Error Lens plugin for Visual Studio Code
 
 ## 🚧 Roadmap
 
-- [ ] Togglable hints
+- [x] Togglable hints
 - [x] Auto adjust colors based on theme
 - [x] Custom colors
 
@@ -52,11 +53,6 @@ require("error-lens").setup(client, {
 }
 ```
 
-
-## ⚠️  Caution
-This Plugin overrides ```vim.diagnostic.config({})``` by default, since virtual_text must be disable for proper displaying
-
-
 ## ⚙️ Configuration
 
 error-lens.nvim comes with the following default options:
@@ -66,13 +62,13 @@ error-lens.nvim comes with the following default options:
   -- this setting tries to auto adjust the colors 
   -- based on the diagnostic-highlight groups and your 
   -- theme background color with a color blender
+  enabled = true
   auto_adjust = {
     enable = false,
     theme_bg = nil, -- mandatory if enable true (e.g. #281478)
     step = 5, -- inc: colors should be brighter/darker
     total = 30 -- steps of blender
   },
-  disable_vt = true, -- disable vim.diagnostic virtual_text
   prefix = 5, -- distance code <-> diagnostic message
   -- default colors
   colors = {
@@ -90,6 +86,8 @@ error-lens.nvim comes with the following default options:
 
 
 ## 🚀 Usage
+
+To disable/toggle the plugin temporarily, use ```:ErrorLensToggle```
 After installing and configuring the plugin, it will automatically enhance the diagnostic display in Neovim.
 
 
