@@ -1,2 +1,4 @@
 local_test
 .DS_Store
+upcoming.txt
+.luarc.json
