@@ -62,14 +62,14 @@ error-lens.nvim comes with the following default options:
   -- this setting tries to auto adjust the colors 
   -- based on the diagnostic-highlight groups and your 
   -- theme background color with a color blender
-  enabled = true
+  enabled = true,
   auto_adjust = {
     enable = false,
     theme_bg = nil, -- mandatory if enable true (e.g. #281478)
     step = 5, -- inc: colors should be brighter/darker
     total = 30 -- steps of blender
   },
-  prefix = 5, -- distance code <-> diagnostic message
+  prefix = 4, -- distance code <-> diagnostic message
   -- default colors
   colors = {
     error_fg = "#FF6363", -- diagnostic font color
@@ -87,8 +87,9 @@ error-lens.nvim comes with the following default options:
 
 ## 🚀 Usage
 
-To disable/toggle the plugin temporarily, use ```:ErrorLensToggle```
 After installing and configuring the plugin, it will automatically enhance the diagnostic display in Neovim.
+
+To disable/toggle the plugin temporarily, use ```:ErrorLensToggle```
 
 
 ## ⌨️  You just switch from VsCode and used OneDarkPro?
