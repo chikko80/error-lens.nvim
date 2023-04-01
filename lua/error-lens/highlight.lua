@@ -21,13 +21,13 @@ local function update_highlights(buf, diagnostics)
 	clear_red_highlights(buf)
 
 	for _, diagnostic in ipairs(diagnostics) do
-		if diagnostic.severity == vim.lsp.protocol.DiagnosticSeverity.Error then
+		if diagnostic.severity == vim.diagnostic.severity.ERROR then
 			set_highlight(buf, diagnostic, "ErrorLensErrorText", "ErrorLensErrorBg")
-		elseif diagnostic.severity == vim.lsp.protocol.DiagnosticSeverity.Warn then
+		elseif diagnostic.severity == vim.diagnostic.severity.WARN then
 			set_highlight(buf, diagnostic, "ErrorLensWarnText", "ErrorLensWarnBg")
-		elseif diagnostic.severity == vim.lsp.protocol.DiagnosticSeverity.Info then
+		elseif diagnostic.severity == vim.diagnostic.severity.INFO then
 			set_highlight(buf, diagnostic, "ErrorLensInfoText", "ErrorLensInfoBg")
-		elseif diagnostic.severity == vim.lsp.protocol.DiagnosticSeverity.Hint then
+		elseif diagnostic.severity == vim.diagnostic.severity.HINT then
 			set_highlight(buf, diagnostic, "ErrorLensHintText", "ErrorLensHintBg")
 		end
 	end
