@@ -6,32 +6,33 @@ local function setup(options)
 	vim.cmd('command! ErrorLensToggle lua require("error-lens").toggle()')
 	config.setup(options)
 
-	-- TODO:  changes this handler to diagnostic.handler
-	local default_handler = vim.lsp.handlers["textDocument/publishDiagnostics"]
-	vim.lsp.handlers["textDocument/publishDiagnostics"] = function(...)
-		default_handler(...)
-
-		local buf = vim.api.nvim_get_current_buf()
-		local diagnostics = vim.diagnostic.get(buf)
-		highlight.update_highlights(buf, diagnostics)
-	end
+	vim.diagnostic.handlers.error_lens = {
+		---@param bufnr number
+		---@param diagnostics table
+		show = function(_, bufnr, diagnostics, _)
+			highlight.update_highlights(bufnr, diagnostics)
+		end,
+		---@param bufnr number
+		hide = function(_, bufnr)
+			highlight.clear_highlights(bufnr)
+		end,
+	}
 end
 
 local function toggle()
-	config.options.enabled = not config.options.enabled
-	if config.options.enabled then
+	local value = not vim.diagnostic.config().error_lens
+    config.options.enabled = value
+
+	if value then
+		-- enable error lens -> disable default virtual_text
 		utils.set_virtual_text(false)
-		-- TODO:  call handler updat
-		local buf = vim.api.nvim_get_current_buf()
-		local diagnostics = vim.diagnostic.get(buf)
-		highlight.update_highlights(buf, diagnostics)
 	else
-		-- restore user setting
+		-- disable_error_lens -> restore user setting virtual_text
 		utils.set_virtual_text(config.user_virtual_text)
-		for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-			highlight.clear_red_highlights(buf)
-		end
 	end
+
+	vim.diagnostic.config({ error_lens = value })
+
 	print("ErrorLens is now", config.options.enabled and "enabled" or "disabled")
 end
 

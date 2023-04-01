@@ -13,12 +13,12 @@ local function set_highlight(buf, diagnostic, fg, bg)
 	})
 end
 
-local function clear_red_highlights(buf)
+local function clear_highlights(buf)
 	vim.api.nvim_buf_clear_namespace(buf, config.namespace, 0, -1)
 end
 
 local function update_highlights(buf, diagnostics)
-	clear_red_highlights(buf)
+	clear_highlights(buf)
 
 	for _, diagnostic in ipairs(diagnostics) do
 		if diagnostic.severity == vim.diagnostic.severity.ERROR then
@@ -35,5 +35,5 @@ end
 
 return {
 	update_highlights = update_highlights,
-	clear_red_highlights = clear_red_highlights,
+	clear_highlights = clear_highlights,
 }
