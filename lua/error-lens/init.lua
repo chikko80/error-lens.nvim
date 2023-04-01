@@ -1,20 +1,16 @@
 local config = require("error-lens.config")
 local highlight = require("error-lens.highlight")
 
-
 local function setup(options)
-    config.setup(options)
-    local default_handler = vim.lsp.handlers["textDocument/publishDiagnostics"]
+	config.setup(options)
 
-    vim.lsp.handlers["textDocument/publishDiagnostics"] = function(...)
-        default_handler(...)
-        highlight.update_highlights()
-    end
-
+	vim.api.nvim_create_autocmd("DiagnosticChanged", {
+		callback = function(args)
+			highlight.update_highlights(args.buf, args.data.diagnostics)
+		end,
+	})
 end
 
-
-
 return {
-    setup = setup
+	setup = setup,
 }
