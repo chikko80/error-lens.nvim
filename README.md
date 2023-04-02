@@ -46,7 +46,7 @@ require("error-lens").setup(client, {
 ```lua
 {
     "chikko80/error-lens.nvim",
-    event = "LspAttach",
+    event = "BufRead",
     opts = {
         -- your options go here
     },
