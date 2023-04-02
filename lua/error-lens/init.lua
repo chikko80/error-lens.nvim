@@ -4,6 +4,8 @@ local highlight = require("error-lens.highlight")
 
 local function setup(options)
 	vim.cmd('command! ErrorLensToggle lua require("error-lens").toggle()')
+	vim.cmd("command! ErrorLensTelescope lua require('error-lens.telescope').show_diagnostics()")
+
 	config.setup(options)
 
 	vim.diagnostic.handlers.error_lens = {
@@ -21,7 +23,7 @@ end
 
 local function toggle()
 	local value = not vim.diagnostic.config().error_lens
-    config.options.enabled = value
+	config.options.enabled = value
 
 	if value then
 		-- enable error lens -> disable default virtual_text
