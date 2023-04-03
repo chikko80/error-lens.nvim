@@ -1,3 +1,8 @@
+## [1.0.2]
+
+### Added
+- Telescope Extension - Sort diagnostics by severity
+
 ## [1.0.1]
 
 ### Added
