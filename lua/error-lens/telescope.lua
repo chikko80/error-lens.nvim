@@ -1,11 +1,9 @@
-local telescope = require("telescope")
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
 local conf = require("telescope.config").values
 local entry_display = require("telescope.pickers.entry_display")
-
+local previewers = require("telescope.previewers")
 
 local severity_labels = {
 	[0] = "Other",
@@ -33,7 +31,8 @@ local function get_severity_label(severity, type)
 	return prefix .. label
 end
 
-local function diagnostics_to_items(diagnostics)
+-- Extract information from diagnostics to display in telescope
+local function preprocess_diagnostics(diagnostics)
 	local items = {}
 	for _, diagnostic in ipairs(diagnostics) do
 		local bufnr = diagnostic.bufnr
@@ -51,8 +50,8 @@ local function diagnostics_to_items(diagnostics)
 				bufnr = bufnr,
 				lnum = row,
 				col = col,
-				message = diagnostic.message,
-				filepath = display_filename,
+				message = vim.trim(diagnostic.message:gsub("[\n]", "")),
+				path = display_filename,
 				sign = sign,
 				hl_group = hl_group,
 				severity = diagnostic.severity, -- Add this line
@@ -65,29 +64,29 @@ local function diagnostics_to_items(diagnostics)
 	return items
 end
 
--- code from telescope.nvim
-local display_items = {
-	{ width = 10 },
-	{ width = 60 },
-	{ remaining = true },
-}
-local displayer = entry_display.create({
-	separator = "▏",
-	items = display_items,
-})
-
+-- Copied and modified from telescope.nvim
 local function entry_maker(entry)
 	local value = entry.value
 	local bufnr = value.bufnr
 	local row, col = value.lnum, value.col
 	local display_line = string.format("%s %4d:%2d", value.sign, row + 1, col + 1)
 
+	local display_items = {
+		{ width = 10 },
+		{ width = 60 },
+		{ remaining = true },
+	}
+	local displayer = entry_display.create({
+		separator = "▏",
+		items = display_items,
+	})
+
 	return {
 		display = function(entry)
 			return displayer({
 				{ display_line, value.hl_group },
 				value.message,
-				value.filepath,
+				value.path,
 			})
 		end,
 		ordinal = entry.ordinal,
@@ -96,6 +95,7 @@ local function entry_maker(entry)
 		col = col + 1,
 		start = col,
 		finish = col + #value.message,
+		path = value.path,
 	}
 end
 
@@ -104,8 +104,9 @@ local function show_diagnostics(opts)
 
 	local diagnostics = vim.diagnostic.get(nil)
 
-	local items = diagnostics_to_items(diagnostics)
+	local items = preprocess_diagnostics(diagnostics)
 
+	-- sort diagnostics by severity
 	table.sort(items, function(a, b)
 		return a.value.severity < b.value.severity
 	end)
@@ -123,7 +124,7 @@ local function show_diagnostics(opts)
 				map("n", "<CR>", actions.select_default)
 				return true
 			end,
-			previewer = false,
+			previewer = previewers.vim_buffer_vimgrep.new(opts), -- Add this line
 		})
 		:find()
 end
