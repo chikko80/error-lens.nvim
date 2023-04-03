@@ -4,52 +4,34 @@ local finders = require("telescope.finders")
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 local conf = require("telescope.config").values
+local entry_display = require("telescope.pickers.entry_display")
 
-local web_devicons = require("nvim-web-devicons")
 
-local severity = {
-  [0] = "Other",
-  [1] = "Error",
-  [2] = "Warning",
-  [3] = "Information",
-  [4] = "Hint",
+local severity_labels = {
+	[0] = "Other",
+	[1] = "Error",
+	[2] = "Warning",
+	[3] = "Info",
+	[4] = "Hint",
 }
 
-
+-- code from trouble.nvim
 -- returns a hl or sign label for the givin severity and type
 -- correctly handles new names introduced in vim.diagnostic
 local function get_severity_label(severity, type)
-  local label = severity
-  local prefix = "LspDiagnostics" .. (type or "Default")
+	local label = severity
+	local prefix = "LspDiagnostics" .. (type or "Default")
 
-  if vim.diagnostic then
-    prefix = type and ("Diagnostic" .. type) or "Diagnostic"
-    label = ({
-      Warning = "Warn",
-      Information = "Info",
-    })[severity] or severity
-  end
-
-  return prefix .. label
-end
-
-
-local function get_signs()
-	local signs = {}
-	for _, v in pairs(severity) do
-		if v ~= "Other" then
-			local status, sign = pcall(function()
-				return vim.trim(vim.fn.sign_getdefined(get_severity_label(v, "Sign"))[1].text)
-			end)
-			if not status then
-				sign = v:sub(1, 1)
-			end
-			signs[string.lower(v)] = sign
-		end
+	if vim.diagnostic then
+		prefix = type and ("Diagnostic" .. type) or "Diagnostic"
+		label = ({
+			Warning = "Warn",
+			Information = "Info",
+		})[severity] or severity
 	end
-	return signs
-end
 
+	return prefix .. label
+end
 
 local function diagnostics_to_items(diagnostics)
 	local items = {}
@@ -59,52 +41,74 @@ local function diagnostics_to_items(diagnostics)
 		local display_filename = filepath:gsub(vim.loop.cwd() .. "/", "")
 		local row, col = diagnostic.lnum, diagnostic.col
 
-		local icon, _ = web_devicons.get_icon(filepath, vim.fn.fnamemodify(filepath, ":e"), { default = true })
+		local sign_label = severity_labels[diagnostic.severity]
+		local sign_info = vim.fn.sign_getdefined(get_severity_label(sign_label, "Sign"))[1]
+		local sign = vim.trim(sign_info.text)
+		local hl_group = vim.trim(sign_info.texthl)
 
-		local text = string.format(
-			"%s %d:%d | %s [%s] | %s",
-			icon,
-			row + 1,
-			col + 1,
-			diagnostic.message,
-			diagnostic.severity_label,
-			display_filename
-		)
+		local entry = {
+			value = {
+				bufnr = bufnr,
+				lnum = row,
+				col = col,
+				message = diagnostic.message,
+				filepath = display_filename,
+				sign = sign,
+				hl_group = hl_group,
+				severity = diagnostic.severity, -- Add this line
+			},
+			ordinal = string.format("%s %d:%d | %s | %s", sign, row + 1, col + 1, diagnostic.message, display_filename),
+		}
 
-		table.insert(items, {
-			display = text,
-			value = diagnostic,
-			ordinal = text,
-		})
+		table.insert(items, entry)
 	end
 	return items
 end
 
-
+-- code from telescope.nvim
+local display_items = {
+	{ width = 10 },
+	{ width = 60 },
+	{ remaining = true },
+}
+local displayer = entry_display.create({
+	separator = "▏",
+	items = display_items,
+})
 
 local function entry_maker(entry)
 	local value = entry.value
 	local bufnr = value.bufnr
 	local row, col = value.lnum, value.col
+	local display_line = string.format("%s %4d:%2d", value.sign, row + 1, col + 1)
 
 	return {
-		display = entry.display,
+		display = function(entry)
+			return displayer({
+				{ display_line, value.hl_group },
+				value.message,
+				value.filepath,
+			})
+		end,
 		ordinal = entry.ordinal,
 		bufnr = bufnr,
 		lnum = row + 1,
 		col = col + 1,
 		start = col,
-		finish = col + #value.source,
+		finish = col + #value.message,
 	}
 end
-
 
 local function show_diagnostics(opts)
 	opts = opts or {}
 
-    local diagnostics = vim.diagnostic.get(nil)
+	local diagnostics = vim.diagnostic.get(nil)
 
 	local items = diagnostics_to_items(diagnostics)
+
+	table.sort(items, function(a, b)
+		return a.value.severity < b.value.severity
+	end)
 
 	pickers
 		.new(opts, {
