@@ -106,9 +106,22 @@ local function show_diagnostics(opts)
 
 	local items = preprocess_diagnostics(diagnostics)
 
-	-- sort diagnostics by severity
+	-- sort diagnostics by severity > current_buf > buffer > line
 	table.sort(items, function(a, b)
-		return a.value.severity < b.value.severity
+		if a.value.severity == b.value.severity then
+			local current_bufnr = vim.api.nvim_get_current_buf()
+			if a.value.bufnr == current_bufnr and b.value.bufnr ~= current_bufnr then
+				return true
+			elseif a.value.bufnr ~= current_bufnr and b.value.bufnr == current_bufnr then
+				return false
+			elseif a.value.bufnr == b.value.bufnr then
+				return a.value.lnum < b.value.lnum
+			else
+				return a.value.bufnr < b.value.bufnr
+			end
+		else
+			return a.value.severity < b.value.severity
+		end
 	end)
 
 	pickers
