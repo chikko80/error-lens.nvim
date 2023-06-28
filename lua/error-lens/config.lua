@@ -13,8 +13,8 @@ local default_options = {
 	enabled = true,
 	auto_adjust = {
 		enable = false,
-		theme_bg = nil,
-		step = 5,
+		fallback_bg_color = nil,
+		step = 7,
 		total = 30,
 	},
 	prefix = 4,
@@ -34,23 +34,31 @@ function M.setup(options)
 	-- Merge user options with default options
 	M.options = vim.tbl_deep_extend("force", {}, default_options, options or {})
 
-	-- If auto_adjust is enabled
 	if M.options.auto_adjust.enable then
-		if M.options.auto_adjust.theme_bg == nil then
-			error("Error: 'theme_bg' is mandatory when 'auto_adjust' is enabled.")
+		if M.options.auto_adjust.fallback_bg_color == nil then
+			error("Error: 'fallback_bg_color' is mandatory when 'auto_adjust' is enabled.")
 		else
 			local step = M.options.auto_adjust.step
 			local total = M.options.auto_adjust.total
 
-			-- Get adjusted colors based on the theme_bg color
+			local theme_color = utils.get_default_theme_bg_color()
+
+			local background_color
+			if theme_color ~= nil then
+				background_color = theme_color
+			else
+				background_color = M.options.auto_adjust.fallback_bg_color
+			end
+
+			-- Get adjusted colors based on the fallback_bg_color color
 			M.options.colors.error_fg, M.options.colors.error_bg =
-				utils.get_default_diagnostic_colors(M.options.auto_adjust.theme_bg, vim_error, step, total)
+				utils.get_default_diagnostic_colors(background_color, vim_error, step, total)
 			M.options.colors.warn_fg, M.options.colors.warn_bg =
-				utils.get_default_diagnostic_colors(M.options.auto_adjust.theme_bg, vim_warn, step, total)
+				utils.get_default_diagnostic_colors(background_color, vim_warn, step, total)
 			M.options.colors.info_fg, M.options.colors.info_bg =
-				utils.get_default_diagnostic_colors(M.options.auto_adjust.theme_bg, vim_info, step, total)
+				utils.get_default_diagnostic_colors(background_color, vim_info, step, total)
 			M.options.colors.hint_fg, M.options.colors.hint_bg =
-				utils.get_default_diagnostic_colors(M.options.auto_adjust.theme_bg, vim_hint, step, total)
+				utils.get_default_diagnostic_colors(background_color, vim_hint, step, total)
 		end
 	end
 

@@ -19,7 +19,7 @@ local function color_bend(hex1, hex2, step, total)
 	return RGBToHex(math.floor(r), math.floor(g), math.floor(b))
 end
 
-local function get_default_diagnostic_colors(theme_bg, hi_group, step, total)
+local function get_default_diagnostic_colors(fallback_bg_color, hi_group, step, total)
 	local color = vim.api.nvim_get_hl_by_name(hi_group, true)
 	local fg = string.format("#%06x", color.foreground)
 	local bg
@@ -27,10 +27,20 @@ local function get_default_diagnostic_colors(theme_bg, hi_group, step, total)
 	if color.background ~= nil then
 		bg = string.format("#%06x", color.background)
 	else
-		bg = color_bend(theme_bg, fg, step, total)
+		bg = color_bend(fallback_bg_color, fg, step, total)
 	end
 
 	return fg, bg
+end
+
+local function get_default_theme_bg_color()
+	local theme_color = vim.api.nvim_get_hl_by_name('Normal',true).background
+
+	if theme_color ~= nil then
+		return string.format('#%06x', theme_color)
+	else
+		return nil
+	end
 end
 
 local function set_virtual_text(value)
@@ -41,5 +51,6 @@ end
 
 return {
 	get_default_diagnostic_colors = get_default_diagnostic_colors,
+	get_default_theme_bg_color = get_default_theme_bg_color,
 	set_virtual_text = set_virtual_text,
 }
