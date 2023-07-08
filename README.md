@@ -73,8 +73,8 @@ error-lens.nvim comes with the following default options:
   enabled = true,
   auto_adjust = {
     enable = false,
-    theme_bg = nil, -- mandatory if enable true (e.g. #281478)
-    step = 5, -- inc: colors should be brighter/darker
+    fallback_bg_color = nil, -- mandatory if enable true (e.g. #281478)
+    step = 7, -- inc: colors should be brighter/darker
     total = 30 -- steps of blender
   },
   prefix = 4, -- distance code <-> diagnostic message
