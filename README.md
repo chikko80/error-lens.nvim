@@ -54,7 +54,7 @@ require("error-lens").setup(client, {
     event = "BufRead",
     dependencies = {
         "nvim-telescope/telescope.nvim"
-    }
+    },
     opts = {
         -- your options go here
     },
